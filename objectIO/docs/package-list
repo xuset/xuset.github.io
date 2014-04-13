@@ -1,3 +1,4 @@
+net.xuset.objectIO
 net.xuset.objectIO.connections
 net.xuset.objectIO.connections.sockets
 net.xuset.objectIO.connections.sockets.groupNet
@@ -5,7 +6,7 @@ net.xuset.objectIO.connections.sockets.groupNet.client
 net.xuset.objectIO.connections.sockets.groupNet.server
 net.xuset.objectIO.connections.sockets.tcp
 net.xuset.objectIO.markupMsg
-net.xuset.objectIO.netObject
+net.xuset.objectIO.netObj
 net.xuset.objectIO.util
 net.xuset.objectIO.util.broadcast
 net.xuset.objectIO.util.scanners
