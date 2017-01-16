@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Firefox tracker</h1>
+    <h2>Persist data beyond 'Clear recent history' in Firefox</h2>
+    <p>There is a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1047098">bug</a> in Firefox that allows websites and advertisers to persist data in IndexedDB that isn't deleted when you clear your browsering data. This allows trackers to persist unique identifiers in your browser that make it hard to delete. You can manually delete IndexedDB data on a site by site basis, but as far as I know, there is now easy way to clear all IndexedDB data.</p>
+
+    <p>The following is a proof of concept that generates a random number and stores it in various data stores. You can then clear your browsing data and see if the random number sticks around.</p>
+
+    <p>Your tracking id is <b id="tracker">unknown</b></p>
+    <p>IndexedDB: <b id="indexeddb">not found</b></p>
+    <p>localStorage: <b id="localStorage">not found</b></p>
+    <p>sessionStorage: <b id="sessionStorage">not found</b></p>
+    <p><button onclick="genNewTracker()" class="btn btn-default">Generate new tracker</button></p>
+    <p>Generate a new tracking id, then clear your browsing data in Firefox by clicking on 'clear recent history'. You can choose to clear just the last 5 minutes or everything, the effect is the same. Once it is cleared reload the page, and you'll see that your tracker id has persisted in IndexedDB beyond the clear.</p>
+  </div>
+
+  <script src="idbkvstore.min.js"></script>
+  <script>
+    try {
+      var idb = new IdbKvStore('tracker', function (err) {
+        if (!err) return
+        console.log(err)
+        idb = null
+      })
+    } catch (e) {
+      console.log(e)
+    }
+
+    retreiveTracker()
+
+    function retreiveTracker () {
+      if (window.localStorage && localStorage.tracker) {
+        document.getElementById('localStorage').innerHTML = localStorage.tracker
+        document.getElementById('tracker').innerHTML = localStorage.tracker
+      }
+      if (window.sessionStorage && sessionStorage.tracker) {
+        document.getElementById('sessionStorage').innerHTML = sessionStorage.tracker
+        document.getElementById('tracker').innerHTML = sessionStorage.tracker
+      }
+
+      if (idb) {
+        idb.get('foobar', function (err, value) {
+          if (err) return console.log('Error', err)
+          if (!value) return
+          document.getElementById('indexeddb').innerHTML = value
+          document.getElementById('tracker').innerHTML = value
+        })
+      }
+    }
+
+    function genNewTracker () {
+      var tracker = Math.random().toString(16).substr(2)
+      if (window.localStorage) localStorage.tracker = tracker
+      if (window.sessionStorage) sessionStorage.tracker = tracker
+
+      if (idb) {
+        idb.set('foobar', tracker, function (err, value) {
+          if (err) console.log('Error', err)
+          retreiveTracker()
+        })
+      } else {
+        retreiveTracker()
+      }
+    }
+  </script>
+</body>
+</html>
