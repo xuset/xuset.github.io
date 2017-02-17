@@ -8,7 +8,7 @@
 <body>
   <div class="container">
     <h1>Firefox tracker</h1>
-    <h2>Persist data beyond 'Clear recent history' in Firefox</h2>
+    <h2>Persist data beyond Clear Browsing Data in Firefox</h2>
     <p>There is a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1047098">bug</a> in Firefox that allows websites and advertisers to persist data in IndexedDB that isn't deleted when you clear your browsering data. This allows trackers to persist unique identifiers in your browser that make it hard to delete. You can manually delete IndexedDB data on a site by site basis, but as far as I know, there is now easy way to clear all IndexedDB data.</p>
 
     <p>The following is a proof of concept that generates a random number and stores it in various data stores. You can then clear your browsing data and see if the random number sticks around.</p>
